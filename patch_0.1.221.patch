@@ -1,0 +1,226 @@
+diff --git a/example/src/App.tsx b/example/src/App.tsx
+index b098202a..132199d7 100644
+--- a/example/src/App.tsx
++++ b/example/src/App.tsx
+@@ -133,16 +133,16 @@ const App = () => {
+             <Stack.Screen
+               name="Severance"
+               component={Severance}
+-              options={{
+-                header: () => null,
+-              }}
++              // options={{
++              //   header: () => null,
++              // }}
+             />
+             <Stack.Screen
+               name="Aurora"
+               component={Aurora}
+-              options={{
+-                header: () => null,
+-              }}
++              // options={{
++              //   header: () => null,
++              // }}
+             />
+             <Stack.Screen
+               name="Glassmorphism"
+diff --git a/example/src/Examples/Graphs/createGraphPath.ts b/example/src/Examples/Graphs/createGraphPath.ts
+index 76fec797..f086548c 100644
+--- a/example/src/Examples/Graphs/createGraphPath.ts
++++ b/example/src/Examples/Graphs/createGraphPath.ts
+@@ -17,7 +17,7 @@ export const createGraphPath = (
+ 
+     if (round && i > 0) {
+       const xMid = (prevPt.x + i) / 2;
+-      const yMid = (prevPt!.y + y) / 2;
++      const yMid = (prevPt.y + y) / 2;
+       retVal.quadTo(prevPt.x, prevPt.y, xMid, yMid);
+       prevPt.x = i;
+       prevPt.y = y;
+diff --git a/example/src/Examples/Graphs/index.tsx b/example/src/Examples/Graphs/index.tsx
+index 0c73e56d..ed066526 100644
+--- a/example/src/Examples/Graphs/index.tsx
++++ b/example/src/Examples/Graphs/index.tsx
+@@ -10,7 +10,7 @@ export const GraphsScreen: React.FC = () => {
+   const { width, height } = useWindowDimensions();
+   return (
+     <View style={styles.container}>
+-      <Interpolation height={height * 0.25} width={width - Padding * 2} />
++      {/* <Interpolation height={height * 0.25} width={width - Padding * 2} /> */}
+       <Slider height={height * 0.25} width={width - Padding * 2} />
+     </View>
+   );
+diff --git a/example/src/Home/HomeScreen.tsx b/example/src/Home/HomeScreen.tsx
+index a9c6c4d1..8fbf3967 100644
+--- a/example/src/Home/HomeScreen.tsx
++++ b/example/src/Home/HomeScreen.tsx
+@@ -93,12 +93,12 @@ export const HomeScreen = () => {
+         description="Drawing Performance Test"
+         route="Performance"
+       />
+-      <HomeScreenButton
++      {/* <HomeScreenButton
+         title="🔧 E2E Tests"
+         description="Run integration tests"
+         route="Tests"
+         testId="Tests"
+-      />
++      /> */}
+     </ScrollView>
+   );
+ };
+diff --git a/example/src/Tests/useAssets.ts b/example/src/Tests/useAssets.ts
+index 9d7c660a..3d03d723 100644
+--- a/example/src/Tests/useAssets.ts
++++ b/example/src/Tests/useAssets.ts
+@@ -2,68 +2,79 @@ import { useImage, useTypeface } from "@shopify/react-native-skia";
+ import { useCallback, useState } from "react";
+ import { Platform } from "react-native";
+ 
+-const SkiaLogo =
+-  Platform.OS === "web" ? require("./assets/skia_logo.png") : "skia_logo";
+-const SkiaLogoJpeg =
+-  Platform.OS === "web"
+-    ? require("./assets/skia_logo_jpeg.jpg")
+-    : "skia_logo_jpeg";
++const SkiaLogo = require("./assets/skia_logo.png");
++const SkiaLogoJpeg = require("./assets/skia_logo_jpeg.jpg");
+ 
+ // NotoColorEmoji.ttf is only available on iOS
+ const NotoColorEmojiSrc =
+-  Platform.OS === "ios"
+-    ? require("./assets/Roboto-Medium.ttf")
+-    : require("./assets/NotoColorEmoji.ttf");
++	Platform.OS === "ios"
++		? require("./assets/Roboto-Medium.ttf")
++		: require("./assets/NotoColorEmoji.ttf");
+ 
+ export const useAssets = () => {
+-  const [error, setError] = useState<Error | null>(null);
+-  const errorHandler = useCallback((e: Error) => setError(e), []);
+-  const mask = useImage(require("./assets/mask.png"), errorHandler);
+-  const oslo = useImage(require("./assets/oslo.jpg"), errorHandler);
+-  const skiaLogoJpeg = useImage(SkiaLogoJpeg, errorHandler);
+-  const skiaLogoPng = useImage(SkiaLogo, errorHandler);
+-  const RobotoMedium = useTypeface(
+-    require("./assets/Roboto-Medium.ttf"),
+-    errorHandler
+-  );
+-  const NotoColorEmoji = useTypeface(NotoColorEmojiSrc, errorHandler);
+-  const UberMoveMediumMono = useTypeface(
+-    require("./assets/UberMove-Medium_mono.ttf"),
+-    errorHandler
+-  );
+-  const NotoSansSCRegular = useTypeface(
+-    require("./assets/NotoSansSC-Regular.otf"),
+-    errorHandler
+-  );
+-  const DinMedium = useTypeface(
+-    require("./assets/DIN-Medium.ttf"),
+-    errorHandler
+-  );
+-  if (error) {
+-    throw new Error("Failed to load assets: " + error.message);
+-  }
+-  if (
+-    !RobotoMedium ||
+-    !oslo ||
+-    !NotoColorEmoji ||
+-    !NotoSansSCRegular ||
+-    !UberMoveMediumMono ||
+-    !DinMedium ||
+-    !skiaLogoJpeg ||
+-    !skiaLogoPng ||
+-    !mask
+-  ) {
+-    return null;
+-  }
+-  return {
+-    RobotoMedium,
+-    NotoColorEmoji,
+-    NotoSansSCRegular,
+-    UberMoveMediumMono,
+-    DinMedium,
+-    oslo,
+-    skiaLogoJpeg,
+-    skiaLogoPng,
+-    mask,
+-  };
++	const [error, setError] = useState<Error | null>(null);
++	const errorHandler = useCallback((title: string, e: Error) => {
++		console.log(title);
++		setError(e);
++	}, []);
++	const oslo = useImage(
++		require("./assets/oslo.jpg"),
++		errorHandler.bind(this, 'require("./assets/oslo.jpg")'),
++	);
++	const mask = useImage(
++		require("./assets/mask.png"),
++		errorHandler.bind(this, 'require("./assets/mask.png")'),
++	);
++	const skiaLogoJpeg = useImage(
++		SkiaLogoJpeg,
++		errorHandler.bind(this, "SkiaLogoJpeg"),
++	);
++	const skiaLogoPng = useImage(SkiaLogo, errorHandler.bind(this, "SkiaLogo"));
++	const RobotoMedium = useTypeface(
++		require("./assets/Roboto-Medium.ttf"),
++		errorHandler.bind(this, 'require("./assets/Roboto-Medium.ttf")'),
++	);
++	const NotoColorEmoji = useTypeface(
++		NotoColorEmojiSrc,
++		errorHandler.bind(this, "NotoColorEmojiSrc"),
++	);
++	const UberMoveMediumMono = useTypeface(
++		require("./assets/UberMove-Medium_mono.ttf"),
++		errorHandler.bind(this, 'require("./assets/UberMove-Medium_mono.ttf")'),
++	);
++	const NotoSansSCRegular = useTypeface(
++		require("./assets/NotoSansSC-Regular.otf"),
++		errorHandler.bind(this, 'require("./assets/NotoSansSC-Regular.otf")'),
++	);
++	const DinMedium = useTypeface(
++		require("./assets/DIN-Medium.ttf"),
++		errorHandler.bind(this, 'require("./assets/DIN-Medium.ttf")'),
++	);
++	if (error) {
++		throw new Error("Failed to load assets: " + error.message);
++	}
++	if (
++		!RobotoMedium ||
++		!oslo ||
++		!NotoColorEmoji ||
++		!NotoSansSCRegular ||
++		!UberMoveMediumMono ||
++		!DinMedium ||
++		!skiaLogoJpeg ||
++		!skiaLogoPng ||
++		!mask
++	) {
++		return null;
++	}
++	return {
++		RobotoMedium,
++		NotoColorEmoji,
++		NotoSansSCRegular,
++		UberMoveMediumMono,
++		DinMedium,
++		oslo,
++		skiaLogoJpeg,
++		skiaLogoPng,
++		mask,
++	};
+ };
+diff --git a/example/tsconfig.json b/example/tsconfig.json
+index cf6cea26..f7b1b709 100644
+--- a/example/tsconfig.json
++++ b/example/tsconfig.json
+@@ -1,5 +1,5 @@
+ {
+-  "extends": "eslint-config-react-native-wcandillon/tsconfig.base",
++  "extends": "expo/tsconfig.base",
+   "compilerOptions": {
+     "noUncheckedIndexedAccess": false,
+   }

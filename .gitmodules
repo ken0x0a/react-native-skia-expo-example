@@ -1,0 +1,3 @@
+[submodule "3rdparty/react-native-skia"]
+	path = 3rdparty/react-native-skia
+	url = git@github.com:Shopify/react-native-skia.git
